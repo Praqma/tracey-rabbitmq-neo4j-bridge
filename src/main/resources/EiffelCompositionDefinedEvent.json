@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "id": "d2f20d54-5a8e-4a69-a7d1-5a11b6d89bf2",
+    "type": "EiffelCompositionDefinedEvent",
+    "time": "1469533752898",
+    "source": {
+      "host": "mads-notebook",
+      "name": "Eiffel command line generator",
+      "uri": "https://github.com/Praqma/tracey-protocol-eiffel-cli-generator",
+      "serializer": {
+        "groupId": "net.praqma.tracey.protocol.eiffel.cli",
+        "artifactId": "tracey-protocol-eiffel-cli-generator",
+        "version": "drop1-19-gdd2bbde"
+      }
+    }
+  },
+  "links": [{
+    "type": "CAUSE",
+    "id": "8a718a03-f473-4e61-9bae-e986885fee18"
+  }],
+  "data": {
+    "name": "Compsition_A"
+  }
+}
