@@ -1,0 +1,51 @@
+apply plugin: 'java'
+apply plugin: 'com.palantir.git-version'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.palantir.gradle.gitversion:gradle-git-version:0.5.2'
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile 'com.jayway.jsonpath:json-path:2.2.0'
+    compile 'com.rabbitmq:amqp-client:2.8.6'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'org.neo4j:neo4j-ogm:1.1.4'
+}
+
+def groupId = 'net.praqma.tracey'
+def artifactId = 'tracey_rabbitmq_neo4j_bridge'
+def mainClassName = 'net.praqma.tracey.tracey_rabbitmq_neo4j_bridge.Adapter'
+def version = gitVersion()
+
+jar {
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    manifest {
+        attributes('Main-Class': mainClassName,
+                'Implementation-Version': version,
+                'Implementation-Title': artifactId,
+                'Implementation-Vendor-Id': groupId)
+    }
+}
+
+task execute(type:JavaExec) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+}
