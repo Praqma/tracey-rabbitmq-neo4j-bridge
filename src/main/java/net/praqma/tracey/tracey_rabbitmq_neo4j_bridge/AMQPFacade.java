@@ -35,7 +35,7 @@ public class AMQPFacade {
         connfac.setPassword(prop.getProperty("password"));
         conn = connfac.newConnection();
         chan = conn.createChannel();
-        chan.exchangeDeclare(prop.getProperty("exchange_name"), prop.getProperty("exchange_type"));
+        chan.exchangeDeclare(prop.getProperty("exchange_name"), prop.getProperty("exchange_type"), true);
     }
 
     public void recieveEvents(Tracey2Neo facade) throws IOException {
@@ -43,7 +43,7 @@ public class AMQPFacade {
         chan.queueBind(queue, prop.getProperty("exchange_name"), prop.getProperty("routing_key"));
 
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-        chan.basicQos(1); // Only hold one message at a time
+        chan.basicQos(10); // Only hold one message at a time
         QueueingConsumer consumer = new QueueingConsumer(chan);
         chan.basicConsume(queue, true, consumer);
 

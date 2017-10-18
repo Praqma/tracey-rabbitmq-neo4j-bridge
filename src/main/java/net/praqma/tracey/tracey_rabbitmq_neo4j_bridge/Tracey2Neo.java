@@ -11,7 +11,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
@@ -24,9 +23,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+
+import org.neo4j.ogm.model.Result;
+import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
-import org.neo4j.ogm.session.result.Result;
 
 /**
  *
@@ -35,7 +36,7 @@ import org.neo4j.ogm.session.result.Result;
 public class Tracey2Neo {
     
 
-	private final static SessionFactory sessionFactory = new SessionFactory();
+	private static SessionFactory sessionFactory;
 	private Properties prop;
 
 	public Tracey2Neo(Properties neoprop) {
@@ -46,17 +47,16 @@ public class Tracey2Neo {
 	}
 
 	private Session getSession() {
-		if (prop.getProperty("use_password").equals("no")) {
-			return sessionFactory.openSession(prop.getProperty("server_url"));
-		} else {
-			return sessionFactory.openSession(prop.getProperty("server_url"), prop.getProperty("username"),
-					prop.getProperty("password"));
+		if (sessionFactory == null) {
+			Configuration cf = new Configuration();
+			cf.set("URI", prop.getProperty("URI"));
+			cf.driverConfiguration().setDriverClassName("org.neo4j.ogm.drivers.http.driver.HttpDriver");
+			sessionFactory = new SessionFactory(cf, "net.praqma.tracey");
 		}
+		return sessionFactory.openSession();
 	}
 
 	/**
-	 * Use the {@link persistEntity} instead
-	 * 
 	 * @param jsonString
 	 */
 	@Deprecated
@@ -108,6 +108,9 @@ public class Tracey2Neo {
 
 	}
 
+	//This should return the internal id of the node we want to match in Neo4j. For Eiffel we need to look in
+	//the relation [n:EventType]-[meta]->{id} and return
+	//MATCH (n)-[meta]->(k:meta { id:"7829c39c-4739-4e1b-8ce8-f412714df3a7"}) return id(n)
 	private Integer[] getNeoId(String id) {
 		List<Integer> outs = new ArrayList<>();
 		Session s = getSession();
@@ -115,10 +118,12 @@ public class Tracey2Neo {
 		Map<String, Object> cypherParams = new HashMap<>();
 		cypherParams.put("id", id);
 		// MATCH(n:Event{id:"59a5a70bce877dfef8d3d9b3de74d87e9b26161f"}) return
-		// n
-		String query = "MATCH(n:Event{id:{id}}) return id(n)";
+		// MATCH (n)-[meta]->(k:meta { id:{id} }) return id(n)
+		// MATCH (n)-[meta]->(k:meta { id:"7829c39c-4739-4e1b-8ce8-f412714df3a7" }) return n
+		//String query = "MATCH (n { id:{id} }) return id(n)";
+		String query = "MATCH (n)-[meta]->(k:meta { id:{id} }) return id(n)";
 		s.beginTransaction();
-		Result res = s.query(query, cypherParams);
+		Result res = s.query(query, cypherParams, true);
 		Iterable<Map<String, Object>> tmp = res.queryResults();
 
 		for (Map<String, Object> row : tmp) {
@@ -260,7 +265,7 @@ public class Tracey2Neo {
 		JsonParser parser = new JsonParser();
 		JsonObject jsonEvent = parser.parse(ent).getAsJsonObject();
 		DocumentContext dc;
-		Configuration conf = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
+		com.jayway.jsonpath.Configuration conf = com.jayway.jsonpath.Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
 		dc = JsonPath.using(conf).parse(ent);
 
 		sb.append("n.type = {type},");
