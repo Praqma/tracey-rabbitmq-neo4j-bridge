@@ -14,4 +14,3 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    repo: Praqma/tracey-rabbitmq-neo4j-bridge
