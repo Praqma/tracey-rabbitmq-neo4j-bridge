@@ -1,3 +1,5 @@
 # tracey-rabbitmq-neo4j-bridge
-Works with Neo4J 2.3, not 3.
+Neo4j bridge that inserts Eiffel messages as graphs with links as relations.
+
+Works with Neo4j version 3.0
 
