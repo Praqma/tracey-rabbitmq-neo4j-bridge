@@ -10,7 +10,7 @@ deploy:
   provider: releases
   api_key:
     secure: mN85VZBmAb04ma5VSIUi9Sj+Y8PB2W1a3pzFu8E0Jpdzcxs4eKMLjSV+JCaZMy+23GkfEEM4lQ2Xddzf+7/vEP8N2OgWpBp0CriCCzkZvlJaxJErJ3JTCDjyZ0qdXMUYtpk62b9o78pmqzFONRbUEV1bvGCGvf1CFFGoRVvmfIVkmlVLUa6XZ7TosUN+drfbCMXTEwSPqcjaEuAVrzmfmlVDiVlvniTmWNKf0FlYyivTRxbR5TeXz6D4reCDaJ6p9p3HVlNnGvAb9JGzQNty4DJqKnOvvV7J7gT0nthJUZx0GlHTzewm+mpjUMj/tq/BsNwOZPjyxGAbuopDJoBIT7BYB8pOqkaC1DxMA0oXa7AXRE52i8YjBNXvbiv7JjKUzhPvoLEJChkXS4uZyGiRqwtvmtDy6X9b1zgN3BpsmTI6OXP6mF9sCwZ0kY/uowhiO1JEOSmuNL5Al4ceC1yPpzsNt/rqOoYNGMXmFrqve0WnCjqs9DiR8ZYix7y+EJRFyrbJOThiJ60iTbEj1H6iF+EEC192TfnQx0q6n6RkmYkk5C7pB0dMyMcmrLdDictUN1tyUPcUZ6r7UpxDE6U0PBpYHHJ8dYXPlQHl6J1tsfb4O53OBIw3mMlxG08Y1pE/Bk7QkfApIPKm2MNzEW8X4V939lJ3iSww27kWMMxg65o=
-  file: build/libs/tracey-protocol-eiffel-cli-generator.jar
+  file: build/libs/tracey-rabbitmq-neo4j-bridge.jar
   skip_cleanup: true
   on:
     tags: true
